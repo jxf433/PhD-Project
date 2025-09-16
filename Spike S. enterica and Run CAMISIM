@@ -1,0 +1,74 @@
+# tools (one-time)
+mamba install -y -c conda-forge -c bioconda ncbi-datasets-cli ncbi-genome-download
+
+# Option A: NCBI "datasets" (RefSeq complete)
+datasets download genome taxon "Salmonella enterica" \
+  --assembly-level complete --reference --dehydrated --filename senterica.zip
+unzip senterica.zip -d senterica_pkg
+datasets rehydrate --directory senterica_pkg
+# FASTA(s) will be under senterica_pkg/ncbi_dataset/data/*/*.fna
+
+# Option B: ncbi-genome-download (RefSeq complete)
+ncbi-genome-download bacteria -g "Salmonella enterica" \
+  --assembly-level complete --formats fasta --section refseq \
+  --output-folder references
+# FASTA(s) will land in references/refseq/bacteria/Salmonella_enterica/*/*.fna.gz
+/storage/group/egd100/default/Jie/CAMISIM/CAMISIM/ref/
+   ├── salmonella_1.fna
+   ├── bg1.fna
+   ├── bg2.fna
+   └── ...
+<genome_id>\t<absolute_path_to_fasta>
+cd /storage/group/egd100/default/Jie/CAMISIM/CAMISIM
+
+cat > ref/genome_locations.tsv <<EOF
+Salmonella_1	$(readlink -f ref/salmonella_1.fna)
+BG_1	        $(readlink -f ref/bg1.fna)
+BG_2	        $(readlink -f ref/bg2.fna)
+BG_3	        $(readlink -f ref/bg3.fna)
+EOF
+cd /storage/group/egd100/default/Jie/CAMISIM/CAMISIM
+
+# spike levels as fractions (1% = 0.01, etc.)
+levels=(0.01 0.001 0.0001 0.1 0)  # add more as needed
+
+for a in "${levels[@]}"; do
+  rem=$(python - <<PY
+a=$a
+print(max(0.0, 1.0-a))
+PY
+)
+  # split remaining equally over 3 backgrounds (change N if you have more)
+  bg=$(python - <<PY
+rem=$rem
+print(rem/3.0)
+PY
+)
+  cat > "abundance_${a}.tsv" <<EOF
+Salmonella_1	$a
+BG_1	$bg
+BG_2	$bg
+BG_3	$bg
+EOF
+done
+# paths
+PROJ=/storage/group/egd100/default/Jie/CAMISIM
+CDIR=$PROJ/CAMISIM
+NCBI_DB=$PROJ/.etetoolkit/taxa.sqlite
+
+cd "$CDIR"
+for a in 0.1 0.01 0.001 0.0001 0; do
+  for seed in 101 102 103; do
+    OUT="sim_out_salmonella_${a}_seed${seed}"
+    RUN_TMP="$PROJ/.tmp/run-$seed-$(date +%s)"
+    mkdir -p "$RUN_TMP"
+    env HOME="$PROJ" TMPDIR="$RUN_TMP" \
+      python metagenome_from_profile.py \
+        -p "abundance_${a}.tsv" \
+        -s 1 \
+        -o "./$OUT" \
+        -tmp "$RUN_TMP" \
+        --ncbi "$NCBI_DB" \
+        --seed "$seed"
+  done
+done
