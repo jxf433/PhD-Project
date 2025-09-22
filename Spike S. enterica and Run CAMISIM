@@ -1,3 +1,6 @@
+#activating env
+conda activate /storage/group/egd100/default/Jie/CAMISIM/env
+
 # tools (one-time)
 mamba install -y -c conda-forge -c bioconda ncbi-datasets-cli ncbi-genome-download
 
