@@ -1,0 +1,21 @@
+# genome_to_id.tsv  (ID \t TAXID)
+GCA_000006945.2	99287     # S. enterica serovar Typhimurium str. LT2
+GCA_000009045.1_ASM904v1_genomic	224308 # Bacillus subtilis subsp. subtilis str. 168
+GCA_000022565.1_ASM2256v1_genomic	240015 # Acidobacterium capsulatum ATCC 51196
+GCA_000025985.1_ASM2598v1_genomic	272559 # Bacteroides fragilis NCTC 9343
+GCA_000195955.2_ASM19595v2_genomic	83332 # Mycobacterium tuberculosis H37Rv
+GCA_000196115.1_ASM19611v1_genomic	243090 # Rhodopirellula baltica SH 1
+GCA_000412675.1_ASM41267v1_genomic	1211579 # Pseudomonas putida NBRC 14164
+GCA_001457635.1_NCTC7465_genomic	1313 # Streptococcus pneumoniae
+GCA_002224265.1_ASM222426v1_genomic	1219061 # Vibrio vulnificus NBRC 15645 = ATCC 27562
+GCA_003019295.1_ASM301929v1_genomic	190304 # Fusobacterium nucleatum subsp. nucleatum ATCC 25586
+GCA_006094375.1_ASM609437v1_genomic	1282 # Staphylococcus epidermidis
+GCA_009035845.1_ASM903584v1_genomic	470 # Acinetobacter baumannii
+GCA_014131755.1_ASM1413175v1_genomic	818 # Bacteroides thetaiotaomicron
+GCA_016027375.1_ASM1602737v1_genomic	1502 # Clostridium perfringens
+GCA_019048245.1_ASM1904824v1_genomic	158836 # Enterobacter hormaechei
+GCA_019668505.1_ASM1966850v1_genomic	47466 # Borrelia miyamotoi
+GCA_020099175.1_ASM2009917v1_genomic	1463165 # Klebsiella quasipneumoniae
+GCA_022984195.1_ASM2298419v1_genomic	269084 # Synechococcus elongatus PCC 6301
+GCA_044361425.1_ASM4436142v1_genomic	820 # Bacteroides uniformis
+GCA_900186865.1_49243_F02_genomic	40324 # Stenotrophomonas maltophilia
