@@ -1,0 +1,43 @@
+params {
+  // ---- INPUTS ----
+  metadata_file        = '/storage/group/egd100/default/Jie/CAMISIM/spike_mix/mappings/meta_data.tsv'
+  number_of_samples    = 4
+  sample_names         = ['spike_1','spike_5','spike_10','spike_20']
+
+  // CAMISIM wants one abundance "distribution" TSV per sample
+  // The pipeline expects 'distribution_files' (glob OK)
+  distribution_files   = '/storage/group/egd100/default/Jie/CAMISIM/spike_mix/distributions/distribution_*.tsv'
+
+  // genome mappings
+  genome_locations_file = '/storage/group/egd100/default/Jie/CAMISIM/spike_mix/mappings/id_to_genome.tsv'
+  genome_to_id_file     = '/storage/group/egd100/default/Jie/CAMISIM/spike_mix/mappings/genome_to_id.tsv'
+
+  // ---- READ SIMULATION ----
+  simulator      = 'art'     // 'art' or 'wgsim'
+  read_length    = 150
+  paired         = true
+  fragment_mean  = 350
+  fragment_sd    = 50
+  fold_coverage  = 10
+
+  // ---- TAXONOMY ----
+  ncbi_taxdump_file = '/storage/group/egd100/default/Jie/CAMISIM/tools/ncbi-taxonomy_20170222.tar.gz'
+
+  // ---- OPTIONAL / SAFE DEFAULTS (kept but harmless) ----
+  biom_profile            = ''
+  reference_genomes       = "${projectDir}/tools/assembly_summary_complete_genomes.txt"
+  no_replace              = false
+  additional_references   = ''
+  simulate_fastq_directly = false
+  basecaller              = 'guppy'
+  profile_read_length     = 150
+  base_error_rate         = 0
+  create_cigar            = false
+}
+
+conda {
+  enabled  = true
+  useMamba = true
+  cacheDir = '/storage/group/egd100/default/Jie/CAMISIM/.nxf_conda_cache'
+}
+
