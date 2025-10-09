@@ -1,0 +1,1 @@
+yacht run --json 'gtdb-rs214-reps.k31_0.995_config.json' --sample_file 'sample_0.k31.s1000.sig.zip' --num_threads 32 --keep_raw --significance 0.95 --min_coverage_list 1 0.5 0.1 0.05 0.01 --out ./result_k31_ani0.95.xlsx
