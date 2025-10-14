@@ -1,1 +1,41 @@
 yacht run --json 'gtdb-rs214-reps.k31_0.995_config.json' --sample_file 'sample_0.k31.s1000.sig.zip' --num_threads 32 --keep_raw --significance 0.95 --min_coverage_list 1 0.5 0.1 0.05 0.01 --out ./result_k31_ani0.95.xlsx
+# 0) Vars
+NUM_THREADS=64
+BASE=/storage/group/egd100/default/Jie/CAMISIM/yacht_work
+REFDIR=$BASE/refdb
+SAMPDIR=$BASE/sample_2
+
+cd "$SAMPDIR"
+
+# 1) Merge forward+reverse into ONE FASTQ (gzipped)
+zcat sample_2_01.fq.gz sample_2_02.fq.gz | gzip > sample_2_merged.fq.gz
+ls -lh sample_2_merged.fq.gz   # sanity check
+
+# 2) Sketch the sample (single k=31, scaled=1000)
+yacht sketch sample \
+  --infile sample_2_merged.fq.gz \
+  --kmer 31 \
+  --scaled 1000 \
+  --outfile sample_2.k31.s1000.single.sig.zip
+
+# quick check: should say "loaded 1 signatures total"
+sourmash sig describe sample_2.k31.s1000.single.sig.zip | grep "loaded"
+
+# 3) Run YACHT against the pretrained GTDB rs214 config
+yacht run \
+  --json "$REFDIR/gtdb-rs214-reps.k31_0.995_pretrained/gtdb-rs214-reps.k31_0.995_config.json" \
+  --sample_file "$SAMPDIR/sample_2.k31.s1000.single.sig.zip" \
+  --significance 0.99 \
+  --num_threads $NUM_THREADS \
+  --min_coverage_list 1 0.6 0.2 0.1 \
+  --out "$SAMPDIR/result.gtdb.xlsx"
+
+# 4) (Optional) Convert a sheet to CSV and look for Salmonella quickly
+yacht convert \
+  --yacht_output "$SAMPDIR/result.gtdb.xlsx" \
+  --sheet_name min_coverage0.2 \
+  --mode yacht \
+  --outfile_prefix result_gtdb_cov0.2 \
+  --outdir "$SAMPDIR"
+
+grep -i "salmonella" "$SAMPDIR"/result_gtdb_cov0.2*.csv || echo "no salmonella rows in cov0.2"
